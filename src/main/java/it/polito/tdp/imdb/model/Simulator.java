@@ -90,10 +90,10 @@ public class Simulator {
 						double max = 0;
 						Actor next = null;
 						
-						for(DefaultWeightedEdge edge : this.grafo.edgesOf(this.intervistati.get(giorno-1))) {
+						for(DefaultWeightedEdge edge : this.grafo.edgesOf(this.queue.get(giorno-1).getAttore())) {
 							if(this.grafo.getEdgeWeight(edge) > max) {
 								max = this.grafo.getEdgeWeight(edge);
-								next = Graphs.getOppositeVertex(this.grafo, edge, this.intervistati.get(giorno-1));
+								next = Graphs.getOppositeVertex(this.grafo, edge, this.queue.get(giorno-1).getAttore());
 							}
 						}
 						this.queue.get(giorno).setAttore(next);
