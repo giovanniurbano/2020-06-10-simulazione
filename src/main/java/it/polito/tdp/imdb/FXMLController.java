@@ -53,7 +53,16 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	
+    	String genere = this.boxGenere.getValue();
+    	if(genere == null) {
+    		this.txtResult.setText("Scegliere un genere!");
+    		return;
+    	}
+    	
+    	String msg = this.model.creaGrafo(genere);
+    	this.txtResult.appendText(msg);
     }
 
     @FXML
