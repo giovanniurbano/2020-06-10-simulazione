@@ -1,11 +1,15 @@
 package it.polito.tdp.imdb.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
@@ -14,6 +18,7 @@ import it.polito.tdp.imdb.db.ImdbDAO;
 public class Model {
 	private ImdbDAO dao;
 	private Map<Integer, Actor> idMap;
+	private List<Actor> vertici;
 	private Graph<Actor, DefaultWeightedEdge> grafo;
 	
 	public Model() {
@@ -28,9 +33,10 @@ public class Model {
 		this.grafo = new SimpleDirectedWeightedGraph<Actor, DefaultWeightedEdge>(DefaultWeightedEdge.class);
 		
 		//vertici
-		Graphs.addAllVertices(this.grafo, this.dao.getActorsByGenre(genere));
+		this.vertici = new ArrayList<Actor>(this.dao.getActorsByGenre(genere));
+		Graphs.addAllVertices(this.grafo, this.vertici);
 		this.idMap = new HashMap<Integer, Actor>();
-		for(Actor a : this.grafo.vertexSet()) {
+		for(Actor a : this.vertici) {
 			this.idMap.put(a.getId(), a);
 		}
 		
@@ -41,5 +47,21 @@ public class Model {
 		}
 		
 		return String.format("Grafo creato con %d vertici e %d archi\n", this.grafo.vertexSet().size(), this.grafo.edgeSet().size());
+	}
+	
+	public Graph<Actor, DefaultWeightedEdge> getGrafo() {
+		return grafo;
+	}
+
+	public List<Actor> getVertici() {
+		return this.vertici;
+	}
+	
+	public List<Actor> getSimili(Actor attore) {
+		ConnectivityInspector<Actor, DefaultWeightedEdge> ci = new ConnectivityInspector<>(this.grafo);
+		Set<Actor> simili = ci.connectedSetOf(attore);
+		List<Actor> s = new ArrayList<Actor>(simili);
+		Collections.sort(s);
+		return s;
 	}
 }

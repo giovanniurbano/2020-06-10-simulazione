@@ -61,7 +61,8 @@ public class ImdbDAO {
 				+ "AND r.movie_id = m.id "
 				+ "AND m.id = g.movie_id "
 				+ "AND g.genre = ? "
-				+ "GROUP BY a.id, a.first_name, a.last_name, a.gender";
+				+ "GROUP BY a.id, a.first_name, a.last_name, a.gender "
+				+ "ORDER BY a.last_name";
 		List<Actor> result = new ArrayList<Actor>();
 		Connection conn = DBConnect.getConnection();
 
