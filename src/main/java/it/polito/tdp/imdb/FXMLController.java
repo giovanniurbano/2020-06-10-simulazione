@@ -93,7 +93,35 @@ public class FXMLController {
 
     @FXML
     void doSimulazione(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	
+    	String genere = this.boxGenere.getValue();
+    	if(genere == null) {
+    		this.txtResult.setText("Scegliere un genere!");
+    		return;
+    	}
+    	if(this.model.getGrafo() == null){
+    		this.txtResult.setText("Creare prima il grafo!");
+    		return;
+    	}
+    	
+    	String nS = this.txtGiorni.getText();
+    	try {
+    		int n = Integer.parseInt(nS);
+    		if(n < 1) {
+    			this.txtResult.setText("Giorni deve essere maggiore di zero!");
+        		return;
+    		}
+    		this.txtResult.appendText("ATTORI INTERVISTATI:\n");
+    		for(Actor a : this.model.simula(n)) {
+    			this.txtResult.appendText(a + "\n");
+    		}
+    		this.txtResult.appendText("Numero di pause: " + this.model.getPause());
+    	}
+    	catch(NumberFormatException nfe) {
+    		this.txtResult.setText("Giorni deve essere un numero intero!");
+    		return;
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

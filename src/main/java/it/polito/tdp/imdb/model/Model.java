@@ -21,6 +21,8 @@ public class Model {
 	private List<Actor> vertici;
 	private Graph<Actor, DefaultWeightedEdge> grafo;
 	
+	private Simulator sim;
+	
 	public Model() {
 		this.dao = new ImdbDAO();
 	}
@@ -63,5 +65,15 @@ public class Model {
 		List<Actor> s = new ArrayList<Actor>(simili);
 		Collections.sort(s);
 		return s;
+	}
+	
+	public List<Actor> simula(int n) {
+		this.sim = new Simulator(n, grafo);
+		this.sim.run();
+		
+		return sim.getIntervistati();
+	}
+	public int getPause() {
+		return this.sim.getnPause();
 	}
 }
