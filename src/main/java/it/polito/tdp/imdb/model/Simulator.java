@@ -38,7 +38,7 @@ public class Simulator {
 		this.intervistati = new ArrayList<Actor>();
 		
 		//scelgo il primo casualmente
-		int primo = (int) Math.floor(Math.random()*(this.daEstrarre.size()-1));
+		int primo = (int) Math.floor(Math.random()*(this.daEstrarre.size()));
 		Actor first = this.daEstrarre.get(primo);
 
 		//lo aggiungo
@@ -67,6 +67,8 @@ public class Simulator {
 				boolean scelto = false;
 				while(scelto != true)
 					scelto = this.sceltaCasuale(giorno);
+				
+				gender++;
 			}
 			else {
 				//giorno di intervista ordinario
@@ -77,11 +79,13 @@ public class Simulator {
 					while(scelto != true)
 						scelto = this.sceltaCasuale(giorno);
 					
+					if(this.queue.get(giorno).getAttore().getGender().equals(this.queue.get(giorno-1).getAttore().getGender()))
+						this.gender++;
 				}
 				else {
 					//consiglio dell'attore
 					
-					if(this.grafo.edgesOf(this.intervistati.get(giorno-1)).size() > 0) {
+					if(this.grafo.degreeOf(this.queue.get(giorno-1).getAttore()) != 0) {
 						//ha lavorato con qualcuno
 						double max = 0;
 						Actor next = null;
@@ -94,7 +98,7 @@ public class Simulator {
 						}
 						this.queue.get(giorno).setAttore(next);
 						this.intervistati.add(next);
-						if(next.getGender().equals(this.intervistati.get(giorno-1).getGender()))
+						if(next.getGender().equals(this.queue.get(giorno-1).getAttore().getGender()))
 							this.gender++;
 						
 						this.daEstrarre.remove(next);
@@ -104,6 +108,8 @@ public class Simulator {
 						boolean scelto = false;
 						while(scelto != true)
 							scelto = this.sceltaCasuale(giorno);
+						if(this.queue.get(giorno).getAttore().getGender().equals(this.queue.get(giorno-1).getAttore().getGender()))
+							this.gender++;
 					}
 				}
 			}	
@@ -111,12 +117,10 @@ public class Simulator {
 	}
 	
 	private boolean sceltaCasuale(int giorno) {
-		int prossimo = (int) Math.floor(Math.random()*(this.daEstrarre.size()-1));
+		int prossimo = (int) Math.floor(Math.random()*(this.daEstrarre.size()));
 		if(this.daEstrarre.get(prossimo) != null) {
 			this.queue.get(giorno).setAttore(this.daEstrarre.get(prossimo));
 			this.intervistati.add(this.daEstrarre.get(prossimo));
-			if(this.daEstrarre.get(prossimo).getGender().equals(this.intervistati.get(giorno-1).getGender()))
-				this.gender++;
 			
 			this.daEstrarre.remove(prossimo);
 			return true;
