@@ -12,6 +12,26 @@ import it.polito.tdp.imdb.model.Movie;
 
 public class ImdbDAO {
 	
+	public List<String> listAllGenres(){
+		String sql = "SELECT DISTINCT genre FROM movies_genres";
+		List<String> result = new ArrayList<>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+				result.add(res.getString("genre"));
+			}
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public List<Actor> listAllActors(){
 		String sql = "SELECT * FROM actors";
 		List<Actor> result = new ArrayList<Actor>();
