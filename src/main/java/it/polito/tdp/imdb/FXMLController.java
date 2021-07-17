@@ -5,6 +5,7 @@
 package it.polito.tdp.imdb;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.imdb.model.Actor;
@@ -49,12 +50,33 @@ public class FXMLController {
 
     @FXML
     void doAttoriSimili(ActionEvent event) {
-    	
+    	if(this.model.getGrafo() == null) {
+    		this.txtResult.setText("Creare grafo!");
+    		return;
+    	}
+    	Actor a = this.boxAttore.getValue();
+    	if(a == null) {
+    		this.txtResult.setText("Scegliere un attore!");
+    		return;
+    	}
+    	List<Actor> simili = this.model.getAttoriSimili(a);
+    	this.txtResult.setText("Attori simili a: " + a);
+    	for(Actor aa : simili)
+    		this.txtResult.appendText("\n" + aa);
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-    	
+    	this.txtResult.clear();
+    	this.boxAttore.getItems().clear();
+    	String genere = this.boxGenere.getValue();
+    	if(genere == null) {
+    		this.txtResult.setText("Scegliere un genere!");
+    		return;
+    	}
+    	String msg = this.model.creaGrafo(genere);
+    	this.txtResult.appendText(msg);
+    	this.boxAttore.getItems().addAll(this.model.getVertici());
     }
 
     @FXML
@@ -76,6 +98,6 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
-    	
+    	this.boxGenere.getItems().addAll(this.model.listAllGenres());
     }
 }
