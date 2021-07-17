@@ -20,6 +20,8 @@ public class Model {
 	private List<Actor> vertici;
 	private Map<Integer, Actor> idMap;
 	
+	private Simulator sim;
+	
 	public Model() {
 		this.dao = new ImdbDAO();
 	}
@@ -62,5 +64,17 @@ public class Model {
 				r.add(aa);
 		Collections.sort(r);
 		return r;
+	}
+	
+	public void simula(int n) {
+		this.sim = new Simulator(n, this.grafo);
+	}
+
+	public List<Actor> getIntervistati() {
+		return this.sim.getIntervistati();
+	}
+
+	public int getGiorniPausa() {
+		return this.sim.getGiorniPausa();
 	}
 }

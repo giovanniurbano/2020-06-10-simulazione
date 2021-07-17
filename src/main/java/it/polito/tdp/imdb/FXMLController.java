@@ -81,7 +81,27 @@ public class FXMLController {
 
     @FXML
     void doSimulazione(ActionEvent event) {
-    
+    	if(this.model.getGrafo() == null) {
+    		this.txtResult.setText("Creare grafo!");
+    		return;
+    	}
+    	String ns = this.txtGiorni.getText();
+    	try {
+    		int n = Integer.parseInt(ns);
+    		if(n < 0) {
+    			this.txtResult.setText("Inserire un intero > 0!");
+        		return;
+    		}
+    		this.model.simula(n);
+    		this.txtResult.setText("Attori intervistati:");
+    		for(Actor a : this.model.getIntervistati()) 
+    			this.txtResult.appendText("\n" + a);
+    		this.txtResult.appendText("\n\nNumero giorni di pausa: " + this.model.getGiorniPausa());
+    	}
+    	catch(NumberFormatException nfe) {
+    		this.txtResult.setText("Inserire un intero!");
+    		return;
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
